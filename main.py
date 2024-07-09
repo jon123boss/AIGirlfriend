@@ -1,6 +1,5 @@
 from characterai import aiocai
 import asyncio
-
 async def main():
     char = input('CHAR ID: ')
 
