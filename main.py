@@ -1,9 +1,9 @@
 from characterai import aiocai
 import asyncio
 async def main():
-    char = input('CHAR ID: ')
+    char = "aLwp_WfJDB9N46gMbvM8pM1682BaKw6BD5ibS-9KZoc"
 
-    client = aiocai.Client('TOKEN')
+    client = aiocai.Client('c3090b0e969ff9aa484638c40ca6459145223959')
 
     me = await client.get_me()
 
