@@ -35,9 +35,9 @@ def text_to_speech(text):
     os.remove(filename)
 
 async def main():
-    char = "aLwp_WfJDB9N46gMbvM8pM1682BaKw6BD5ibS-9KZoc"
+    char = "KQa-enbmaWlYUVm7bg6qIu06SeNewTe2SsHmvfpyH6A"
 
-    client = aiocai.Client('c3090b0e969ff9aa484638c40ca6459145223959')
+    client = aiocai.Client('')
 
     me = await client.get_me()
 
