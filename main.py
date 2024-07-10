@@ -7,6 +7,26 @@ import time
 import speech_recognition
 import pyttsx3
 
+from faster_whisper import WhisperModel
+
+model_size = "large-v3"
+
+# Run on GPU with FP16
+model = WhisperModel(model_size, device="cuda", compute_type="float16")
+
+# or run on GPU with INT8
+# model = WhisperModel(model_size, device="cuda", compute_type="int8_float16")
+# or run on CPU with INT8
+# model = WhisperModel(model_size, device="cpu", compute_type="int8")
+
+segments, info = model.transcribe("audio.mp3", beam_size=5)
+
+print("Detected language '%s' with probability %f" % (info.language, info.language_probability))
+
+for segment in segments:
+    print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
+
+
 def text_to_speech(text):
     # Create a gTTS object
     tts = gTTS(text=text, lang='en')
@@ -33,12 +53,11 @@ def text_to_speech(text):
 
     # Delete the temporary audio file
     os.remove(filename)
-    print(f"Deleted temporary file: {filename}")
 
 async def main():
-    char = "EEI6sjnddRIJTVC59MODiYjL0-JyDIVI2IEGLkPx2Jk"
+    char = "aLwp_WfJDB9N46gMbvM8pM1682BaKw6BD5ibS-9KZoc"
 
-    client = aiocai.Client('')
+    client = aiocai.Client('c3090b0e969ff9aa484638c40ca6459145223959')
 
     me = await client.get_me()
 
