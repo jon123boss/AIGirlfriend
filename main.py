@@ -4,27 +4,8 @@ import pygame
 from gtts import gTTS
 import os
 import time
-import speech_recognition as sr
-
-# Initialize recognizer
-recognizer = sr.Recognizer()
-
-# Load the audio file
-audio_file = sr.AudioFile('path_to_audio_file.wav')
-
-with audio_file as source:
-    # Adjust for ambient noise and record the audio
-    recognizer.adjust_for_ambient_noise(source)
-    audio = recognizer.record(source)
-
-# Recognize speech using Google Web Speech API
-try:
-    text = recognizer.recognize_google(audio)
-    print("You said: " + text)
-except sr.UnknownValueError:
-    print("Google Web Speech could not understand the audio")
-except sr.RequestError as e:
-    print("Could not request results from Google Web Speech; {0}".format(e))
+import speech_recognition
+import pyttsx3
 
 def text_to_speech(text):
     # Create a gTTS object
@@ -57,7 +38,7 @@ def text_to_speech(text):
 async def main():
     char = "EEI6sjnddRIJTVC59MODiYjL0-JyDIVI2IEGLkPx2Jk"
 
-    client = aiocai.Client('c3090b0e969ff9aa484638c40ca6459145223959')
+    client = aiocai.Client('')
 
     me = await client.get_me()
 
@@ -68,17 +49,24 @@ async def main():
 
         print(f'{answer.name}: {answer.text}')
 
+        print("Set up complete")
+
+        recognizer = speech_recognition.Recognizer()
+
         while True:
-            text = input('YOU: ')
-            while text == "repeat":
-                text_to_speech(message.text)
-                text = input('YOU: ')
-
-
-            message = await chat.send_message(char, new.chat_id, text)
-
-            print(f'{message.name}: {message.text}')
-            text_to_speech(message.text)
+            try:
+                with speech_recognition.Microphone() as mic:
+                    recognizer.adjust_for_ambient_noise(mic, duration=0.2)
+                    audio = recognizer.listen(mic)
+                    text = recognizer.recognize_google(audio)
+                    text = text.lower()
+                    print(f"Recognized: {text}")
+                    message = await chat.send_message(char, new.chat_id, text)
+                    print(f'{message.name}: {message.text}')
+                    text_to_speech(message.text)
+            except speech_recognition.UnknownValueError:
+                recognizer = speech_recognition.Recognizer()
+                continue
 
 
 asyncio.run(main())
