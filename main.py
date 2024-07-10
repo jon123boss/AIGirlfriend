@@ -1,8 +1,8 @@
 from characterai import aiocai
 import asyncio
 import pygame
-
 from gtts import gTTS
+
 tts = gTTS('hello', lang='en')
 tts.save('hello.mp3')
 # Initialize pygame mixer
